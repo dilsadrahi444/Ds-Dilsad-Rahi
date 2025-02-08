@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Games</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+            transition: background 0.5s;
+        }
+        body.dark-mode {
+            background: linear-gradient(to right, #000428, #004e92);
+            color: yellow;
+        }
+        .container {
+            max-width: 500px;
+            margin: 200px auto;
+            padding: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 100px;
+            text-align: center;
+            box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+        }
+        input, button {
+            width: 100%;
+            padding: 12px;
+            margin: 15px 0;
+            font-size: 12px;
+            border: none;
+            border-radius: 20px;
+            outline: none;
+        }
+        button {
+            background: #ff416c;
+            color: blue;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #ff4b2b;
+        }
+        .dark-mode-toggle, .music-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: black;
+            color: white;
+            padding: 10px;
+            border-radius: 30px;
+            cursor: pointer;
+            z-index: 9999;
+        }
+        .dark-mode-toggle {
+            right: 220px;
+        }
+        .games {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .game {
+            background: rgba(255, 255, 255, 0.3);
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        .game:hover {
+            transform: scale(1.1);
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body onload="checkLoginStatus()">
+
+    <!-- Dark Mode and Music Toggle -->
+    <div class="dark-mode-toggle" onclick="toggleDarkMode()">🌙 Dark Mode</div>
+    <div class="music-toggle" onclick="toggleMusic()">🔊 Music</div>
+
+    <!-- Background Music -->
+    <audio id="backgroundMusic" loop>
+        <source src="default-music.mp3" type="audio/mp3">
+    </audio>
+
+    <!-- Login Page -->
+    <div class="container" id="loginPage">
+        <h2>Login with OTP</h2>
+        <input type="text" id="phoneOrEmail" placeholder="Enter Phone or Email">
+        <button onclick="sendOTP()">Send OTP</button>
+    </div>
+
+    <!-- OTP Page -->
+    <div class="container hidden" id="otpPage">
+        <h2>Enter OTP</h2>
+        <input type="text" id="otpInput" placeholder="Enter OTP">
+        <button onclick="verifyOTP()">Verify OTP</button>
+    </div>
+
+    <!-- Home Page -->
+    <div class="container hidden" id="homePage">
+        <h2>Welcom, To DS Dilsad Rahi Website! 🎉</h2>
+        <button onclick="logout()">Logout</button>
+        <div class="games">
+            <div class="game" onclick="playGame('https://tetris.com/play-tetris')">Tetris</div>
+            <div class="game" onclick="playGame('https://snake.googlemaps.com/')">Snake</div>
+            <div class="game" onclick="playGame('https://pacman.com/')">Pacman</div>
+            <!-- Add 15-20 games here -->
+        </div>
+    </div>
+
+    <script>
+        let otpCode;
+
+        function checkLoginStatus() {
+            if (localStorage.getItem("isLoggedIn")) {
+                document.getElementById("loginPage").classList.add("hidden");
+                document.getElementById("homePage").classList.remove("hidden");
+            }
+        }
+
+        function sendOTP() {
+            otpCode = Math.floor(100000 + Math.random() * 900000);
+            alert("Your OTP is: " + otpCode);
+            document.getElementById("loginPage").classList.add("hidden");
+            document.getElementById("otpPage").classList.remove("hidden");
+        }
+
+        function verifyOTP() {
+            let enteredOtp = document.getElementById("otpInput").value;
+            if (enteredOtp == otpCode) {
+                alert("OTP Verified!");
+                localStorage.setItem("isLoggedIn", true);
+                window.open("https://www.instagram.com/r_o_c_k_s_t_a_r__444", "_blank");
+                document.getElementById("otpPage").classList.add("hidden");
+                document.getElementById("homePage").classList.remove("hidden");
+            } else {
+                alert("Invalid OTP! Try again.");
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem("isLoggedIn");
+            document.getElementById("homePage").classList.add("hidden");
+            document.getElementById("loginPage").classList.remove("hidden");
+        }
+
+        function playGame(url) {
+            window.open(url, "_blank");
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark-mode");
+        }
+
+        let isMusicPlaying = false;
+        function toggleMusic() {
+            let music = document.getElementById("backgroundMusic");
+            if (isMusicPlaying) {
+                music.pause();
+            } else {
+                music.play();
+            }
+            isMusicPlaying = !isMusicPlaying;
+        }
+    </script>
+</body>
+</html>
